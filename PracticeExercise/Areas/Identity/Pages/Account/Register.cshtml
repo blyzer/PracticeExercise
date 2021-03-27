@@ -40,7 +40,7 @@
             <div class="form-group">
                 <label asp-for="Input.Gender"></label>
                 <select asp-for="Input.Gender"
-                    asp-items="@(new SelectList(Model.Genders,"Id","FullName"))">
+                    asp-items="@(new SelectList(Model.Genders))">
                     <option>Please select one</option>
                 </select>
                 <span asp-validation-for="Input.Gender" class="text-danger"></span>

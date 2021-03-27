@@ -15,6 +15,7 @@ using PracticeExercise.Data;
 using PracticeExercise.Models;
 using NSwag;
 using NSwag.Generation.Processors.Security;
+using PracticeExercise.Attributes;
 
 namespace PracticeExercise
 {
@@ -52,7 +53,12 @@ namespace PracticeExercise
             {
                 options.SuppressModelStateInvalidFilter = true;
             });
-            
+
+            services.AddMvc().AddMvcOptions(opts => {
+
+                opts.ModelMetadataDetailsProviders.Add(new CustomMetadataProvider());
+            });
+
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {

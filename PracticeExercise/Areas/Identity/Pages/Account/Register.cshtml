@@ -3,6 +3,13 @@
 @{
     ViewData["Title"] = "Register";
 }
+<script type="text/javascript">
+    $(function () {
+        $('[mask]').each(function (e) {
+            $(this).mask($(this).attr('mask'));
+        });
+    });
+</script>
 
 <h1>@ViewData["Title"]</h1>
 
@@ -24,7 +31,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Input.IDCard"></label>
-                <input asp-for="Input.IDCard" class="form-control" />
+                <input asp-for="Input.IDCard" mask="999-9999999-9" class="form-control" />
                 <span asp-validation-for="Input.IDCard" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -40,15 +47,18 @@
             <div class="form-group">
                 <label asp-for="Input.Gender"></label>
                 <select asp-for="Input.Gender"
-                    asp-items="@(new SelectList(Model.Genders))">
+                        asp-items="@Html.GetEnumSelectList<Gender>()">
                     <option>Please select one</option>
                 </select>
                 <span asp-validation-for="Input.Gender" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Input.Position"></label>
-                <input asp-for="Input.Position" class="form-control" />
-                <span asp-validation-for="Input.Position" class="text-danger"></span>
+                <label asp-for="Input.Department"></label>
+                <select asp-for="Input.Department"
+                        asp-items="@Model.Departments">
+                    <option>Please select one</option>
+                </select>
+                <span asp-validation-for="Input.Gender" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Input.Email"></label>

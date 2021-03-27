@@ -15,6 +15,12 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using PracticeExercise.Data;
 using PracticeExercise.Models;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.Design;
+using System.ComponentModel.Design.Serialization;
+using System.ComponentModel.DataAnnotations.Schema;
+using PracticeExercise.Attributes;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace PracticeExercise.Areas.Identity.Pages.Account
 {
@@ -65,8 +71,8 @@ namespace PracticeExercise.Areas.Identity.Pages.Account
 
             [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 11)]
-            //[InputMask("")]
             [DataType(DataType.Text)]
+            [HTMLMaskAttribute("mask", "999-9999999-9")] //number only
             public string IDCard { get; set; }
 
             [Required(ErrorMessage = "Your Birthdate Is Required")]
@@ -101,23 +107,16 @@ namespace PracticeExercise.Areas.Identity.Pages.Account
             public string ConfirmPassword { get; set; }
         }
 
-
-        public IEnumerable<Gender> Genders;
-        public enum Gender
-        {
-            Male = 1,
-            Female = 2,
-            Other = 3
-        }
-
-        public IEnumerable<Department> Departments;
+        public List<SelectListItem> Departments;
 
         public async Task OnGetAsync(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-            Genders = Enum.GetValues(typeof(Gender)).Cast<Gender>().ToList();
-            Departments = _context.Departments.ToList();
+            Departments = _context.Departments.Select(
+                x =>
+                    new SelectListItem { Text = x.Name, Value = x.DepartmentID.ToString() }
+            ).ToList();
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)

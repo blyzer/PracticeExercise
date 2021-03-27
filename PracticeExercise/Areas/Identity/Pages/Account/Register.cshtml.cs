@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using PracticeExercise.Data;
 using PracticeExercise.Models;
 
 namespace PracticeExercise.Areas.Identity.Pages.Account
@@ -24,17 +25,20 @@ namespace PracticeExercise.Areas.Identity.Pages.Account
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly ApplicationDbContext _context;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            ApplicationDbContext applicationDbContext)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _context = applicationDbContext;
         }
 
         [BindProperty]
@@ -106,11 +110,14 @@ namespace PracticeExercise.Areas.Identity.Pages.Account
             Other = 3
         }
 
+        public IEnumerable<Department> Departments;
+
         public async Task OnGetAsync(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             Genders = Enum.GetValues(typeof(Gender)).Cast<Gender>().ToList();
+            Departments = _context.Departments.ToList();
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
